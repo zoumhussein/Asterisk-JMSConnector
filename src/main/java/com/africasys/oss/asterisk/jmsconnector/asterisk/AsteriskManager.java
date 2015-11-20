@@ -82,7 +82,7 @@ public class AsteriskManager implements ManagerEventListener{
 
     	int retry = 10;
     	boolean connected = false;
-    	while(retry >0 && connected){
+    	while(retry >0 && !connected){
     		try{
             
     			ManagerConnectionFactory factory = new ManagerConnectionFactory(asteriskHost, asteriskUsername, asteriskPassword);

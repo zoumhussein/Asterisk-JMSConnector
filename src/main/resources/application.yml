@@ -6,14 +6,15 @@ ami:
 
 logging.level:
    com.africasys: DEBUG
+   org.asteriskjava: DEBUG
    org.springframework: INFO
 
 cluster:
-    backend.topic:backend.topic
-    asterisk.queue:asterisk.queue
+    backend.topic: backend.topic
+    asterisk.queue: asterisk.queue
     
 broker:
     url: failover:tcp://localhost:61616
-    login: 
-    pwd: 
+    login: login
+    pwd: pwd
     jms.enabled: true

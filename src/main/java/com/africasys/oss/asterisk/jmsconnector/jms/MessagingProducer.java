@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 public class MessagingProducer {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(MessagingProducer.class);
-    private static final String JMS_CLIENT_ID = "afrivox-builder";
+    private static final String JMS_CLIENT_ID = "asterisk-connector";
 	private ActiveMQConnectionFactory connectionFactory;
 	private Connection connection;
     private Session session;

@@ -19,7 +19,8 @@ public class AsteriskEvent {
 	private static final String DATE_FORMAT = "yyyyMMdd-HHmmss";
 	private MapMessage mapMessage;
 	
-	public AsteriskEvent(Session session) {
+	public AsteriskEvent(Session session) throws JMSException {
+		mapMessage = session.createMapMessage();
 	}
 	
 	public AsteriskEvent(String payload, Session session, String callerId, String callee, Date callDate) throws JMSException{
