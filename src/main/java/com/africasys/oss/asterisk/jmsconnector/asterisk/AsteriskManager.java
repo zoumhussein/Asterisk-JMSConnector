@@ -96,13 +96,15 @@ public class AsteriskManager implements ManagerEventListener{
     				LOGGER.warn("connect error {}", ExceptionUtils.getFullStackTrace(e));
     				retry --;
 			}
+    		
+		   Thread.sleep(20*1000);
 		}
     	
     	if(!connected){
 			LOGGER.error("App is not connected to it target asterisk after retries!");
     	}else{
     		while(true){
-			   Thread.sleep(10000);
+			   Thread.sleep(10*1000);
     		}
     	}
     }
@@ -123,6 +125,8 @@ public class AsteriskManager implements ManagerEventListener{
 		LOGGER.debug("New event received {}", event);
 
 		boolean shoudBePublished = false;
+		
+		//TODO varsetevent hangupevent newextenevent newchannelevent newstateevent
 		
 		if(event instanceof AgentLoginEvent ){
 			shoudBePublished = true;
@@ -160,11 +164,11 @@ public class AsteriskManager implements ManagerEventListener{
 			shoudBePublished = true;
 		}
 		
-		if(shoudBePublished){
+		if(shoudBePublished && producer.getSession() != null){
 			try {
-				AsteriskEvent asteriskEvent = new AsteriskEvent(producer.getSession());
-				asteriskEvent.setPayload(event.toString());
-				producer.publishMessage(asteriskEvent.getMapMessage(), backendTopic, false, 10*60*1000);
+			AsteriskEvent asteriskEvent = new AsteriskEvent(producer.getSession());
+			asteriskEvent.setPayload(event.toString());
+			producer.publishMessage(asteriskEvent.getMapMessage(), backendTopic, false, 10*60*1000);
 			} catch (Exception e) {
 				LOGGER.error(ExceptionUtils.getFullStackTrace(e));
 			}

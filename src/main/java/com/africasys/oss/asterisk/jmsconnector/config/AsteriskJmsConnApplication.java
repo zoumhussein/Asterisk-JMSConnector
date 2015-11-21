@@ -14,10 +14,6 @@ public class AsteriskJmsConnApplication {
 
     public static void main(String[] args) throws InterruptedException {
         SpringApplication.run(AsteriskJmsConnApplication.class, args);
-//        
-//        while(true){
-//        	Thread.sleep(100000);
-//        }
     }
     
     @Bean

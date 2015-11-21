@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
 public class MessagingConsumer implements MessageListener {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(MessagingConsumer.class);
-    private static final String JMS_CLIENT_ID = "asterisk-connector";
+    private static final String JMS_CLIENT_ID = "asterisk-connector-consumer";
 	private ActiveMQConnectionFactory connectionFactory;
 	private Connection connection;
     private Session session;

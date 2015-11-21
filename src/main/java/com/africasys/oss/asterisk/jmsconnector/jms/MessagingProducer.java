@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 public class MessagingProducer {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(MessagingProducer.class);
-    private static final String JMS_CLIENT_ID = "asterisk-connector";
+    private static final String JMS_CLIENT_ID = "asterisk-connector-producer";
 	private ActiveMQConnectionFactory connectionFactory;
 	private Connection connection;
     private Session session;
@@ -37,7 +37,7 @@ public class MessagingProducer {
 	@Value("${broker.pwd}")
 	private String brokerPassword;
 
-	@Value("${broker.messaging.enabled:false}")
+	@Value("${broker.jms.enabled:false}")
 	private boolean jmsEnabled;
 	
 	public MessagingProducer(){

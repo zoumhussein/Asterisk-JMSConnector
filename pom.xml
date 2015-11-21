@@ -8,7 +8,7 @@
 	<version>0.0.1</version>
 	<packaging>jar</packaging>
 
-	<name>Asterisk-JMSConn</name>
+	<name>Asterisk-JMSConnector</name>
 	<description></description>
 
 	<parent>
@@ -75,4 +75,13 @@
 	</build>
 	
 
+	<url>www.africasys.com</url>
+	<organization>
+		<name>AFRICASYS</name>
+		<url>www.africasys.com</url>
+	</organization>
+	<scm>
+		<developerConnection>Zoumana TRAORE</developerConnection>
+		<url>https://github.com/zoumhussein/Asterisk-JMSConnector</url>
+	</scm>
 </project>

@@ -1,3 +1,6 @@
+server:
+   port: 8888
+
 ami:
    username : user
    password : pwd
@@ -6,8 +9,8 @@ ami:
 
 logging.level:
    com.africasys: DEBUG
-   org.asteriskjava: DEBUG
-   org.springframework: INFO
+   org.asteriskjava: INFO
+   org.springframework: WARN
 
 cluster:
     backend.topic: backend.topic
