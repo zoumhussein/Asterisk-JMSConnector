@@ -10,13 +10,18 @@ import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Session;
 
-import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.asteriskjava.live.AsteriskServer;
+import org.asteriskjava.live.CallerId;
+import org.asteriskjava.live.DefaultAsteriskServer;
+import org.asteriskjava.live.ManagerCommunicationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import com.africasys.oss.asterisk.jmsconnector.asterisk.AsteriskEvent;
  /**
   * 
   * @author Zoumana TRAORE
@@ -46,6 +51,17 @@ public class MessagingConsumer implements MessageListener {
 	
 	@Value("${cluster.asterisk.queue}")
 	private String asteriskQueue;
+	
+	@Value("${ami.username}")
+	private String asteriskUsername;
+	
+	@Value("${ami.password}")
+	private String asteriskPassword;
+	
+	@Value("${ami.server}")
+	private String asteriskHost;
+	
+	private AsteriskServer server;
 	
 	@PostConstruct
     public void init() {
@@ -114,13 +130,28 @@ public class MessagingConsumer implements MessageListener {
 	@Override
 	public void onMessage(Message message) {
 		try {
-			message.acknowledge();
 			LOGGER.debug("Message received of type {} {}", message.getClass(), message);
 			
 			if(message instanceof MapMessage){
-				LOGGER.debug("Map Message received: {}", message);
-
-				//TODO implement business logic here 
+				MapMessage msg = (MapMessage) message; 
+				LOGGER.debug("Map Message received: {}", msg);
+				
+				//Order to trigger outgoing call
+				if(message.getJMSType().equals(AsteriskEvent.class.getName())){
+					//ack if only "mine"
+					message.acknowledge();
+					AsteriskEvent order = AsteriskEvent.objectBuilder(msg);
+					server = new DefaultAsteriskServer(asteriskHost, asteriskUsername, asteriskPassword);
+					
+					try{
+						server.initialize();
+						server.originateToExtension(order.getCallee(), order.getContext(), order.getExtension(), 1, 30*1000, new CallerId(order.getCallerId(), order.getCallerId()), null);
+						server.shutdown();
+					}catch(ManagerCommunicationException e){
+						LOGGER.error("server initialize exception {}", e);
+					}
+					
+				}
 			}
 			
 		} catch (JMSException e) {

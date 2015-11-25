@@ -12,16 +12,24 @@ import org.asteriskjava.manager.ManagerConnectionFactory;
 import org.asteriskjava.manager.ManagerEventListener;
 import org.asteriskjava.manager.PingThread;
 import org.asteriskjava.manager.TimeoutException;
+import org.asteriskjava.manager.event.AgentCalledEvent;
+import org.asteriskjava.manager.event.AgentCompleteEvent;
+import org.asteriskjava.manager.event.AgentConnectEvent;
 import org.asteriskjava.manager.event.AgentLoginEvent;
 import org.asteriskjava.manager.event.AgentLogoffEvent;
+import org.asteriskjava.manager.event.AgentRingNoAnswerEvent;
 import org.asteriskjava.manager.event.BridgeEvent;
 import org.asteriskjava.manager.event.ConnectEvent;
 import org.asteriskjava.manager.event.DialEvent;
 import org.asteriskjava.manager.event.DisconnectEvent;
 import org.asteriskjava.manager.event.ExtensionStatusEvent;
+import org.asteriskjava.manager.event.HangupEvent;
 import org.asteriskjava.manager.event.HoldEvent;
 import org.asteriskjava.manager.event.ManagerEvent;
 import org.asteriskjava.manager.event.NewAccountCodeEvent;
+import org.asteriskjava.manager.event.NewChannelEvent;
+import org.asteriskjava.manager.event.NewExtenEvent;
+import org.asteriskjava.manager.event.NewStateEvent;
 import org.asteriskjava.manager.event.PeerStatusEvent;
 import org.asteriskjava.manager.event.PriEventEvent;
 import org.asteriskjava.manager.event.QueueEntryEvent;
@@ -30,6 +38,7 @@ import org.asteriskjava.manager.event.QueueMemberEvent;
 import org.asteriskjava.manager.event.QueueMemberRemovedEvent;
 import org.asteriskjava.manager.event.QueueMemberStatusEvent;
 import org.asteriskjava.manager.event.RegistryEvent;
+import org.asteriskjava.manager.event.VarSetEvent;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -126,8 +135,6 @@ public class AsteriskManager implements ManagerEventListener{
 
 		boolean shoudBePublished = false;
 		
-		//TODO varsetevent hangupevent newextenevent newchannelevent newstateevent
-		
 		if(event instanceof AgentLoginEvent ){
 			shoudBePublished = true;
 		}else if(event instanceof AgentLogoffEvent ){
@@ -139,6 +146,16 @@ public class AsteriskManager implements ManagerEventListener{
 		}else if(event instanceof ConnectEvent ){
 			shoudBePublished = true;
 		}else if(event instanceof DisconnectEvent ){
+			shoudBePublished = true;
+		}else if(event instanceof VarSetEvent ){
+			shoudBePublished = true;
+		}else if(event instanceof HangupEvent ){
+			shoudBePublished = true;
+		}else if(event instanceof NewExtenEvent ){
+			shoudBePublished = true;
+		}else if(event instanceof NewChannelEvent ){
+			shoudBePublished = true;
+		}else if(event instanceof NewStateEvent ){
 			shoudBePublished = true;
 		}else if(event instanceof ExtensionStatusEvent ){
 			shoudBePublished = true;
@@ -162,12 +179,25 @@ public class AsteriskManager implements ManagerEventListener{
 			shoudBePublished = true;
 		}else if(event instanceof PeerStatusEvent ){
 			shoudBePublished = true;
+		}else if(event instanceof AgentLoginEvent ){
+			shoudBePublished = true;
+		}else if(event instanceof AgentLogoffEvent ){
+			shoudBePublished = true;
+		}else if(event instanceof AgentCalledEvent ){
+			shoudBePublished = true;
+		}else if(event instanceof AgentCompleteEvent ){
+			shoudBePublished = true;
+		}else if(event instanceof AgentConnectEvent ){
+			shoudBePublished = true;
+		}else if(event instanceof AgentRingNoAnswerEvent ){
+			shoudBePublished = true;
 		}
 		
 		if(shoudBePublished && producer.getSession() != null){
 			try {
 			AsteriskEvent asteriskEvent = new AsteriskEvent(producer.getSession());
 			asteriskEvent.setPayload(event.toString());
+			asteriskEvent.setEventTpe(event.getClass().getName());
 			producer.publishMessage(asteriskEvent.getMapMessage(), backendTopic, false, 10*60*1000);
 			} catch (Exception e) {
 				LOGGER.error(ExceptionUtils.getFullStackTrace(e));
